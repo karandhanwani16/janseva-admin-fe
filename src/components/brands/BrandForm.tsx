@@ -1,124 +1,3 @@
-// export default function BrandUpload() {
-
-//     const brandUploadMutation = useMutation({
-//         mutationFn: (data: z.infer<typeof formSchema>) => {
-//             const formData = new FormData();
-//             formData.append('name', data.brandName);
-//             if (data.brandDescription) {
-//                 formData.append('description', data.brandDescription);
-//             }
-//             if (data.brandImages && data.brandImages.length > 0) {
-//                 formData.append('logo', data.brandImages[0]);
-//             }
-
-//             return axiosInstance.post(BRAND_API, formData, {
-//                 headers: {
-//                     'Content-Type': 'multipart/form-data',
-//                 },
-//             });
-//         },
-//         onSuccess: (response) => {
-//             const { data: { status, message, data } } = response;
-//             if (status === "success") {
-//                 toast.success(message);
-//             } else {
-//                 toast.error(message);
-//             }
-//         },
-//         onError: (error) => {
-//             if (error instanceof Error) {
-//                 toast.error(error.message);
-//             } else {
-//                 toast.error(error);
-//             }
-//         }
-//     });
-
-//     const form = useForm<z.infer<typeof formSchema>>({
-//         resolver: zodResolver(formSchema),
-//     })
-
-//     function onSubmit(values: z.infer<typeof formSchema>) {
-//         try {
-//             brandUploadMutation.mutate(values);
-//         } catch (error) {
-//             console.error("Form submission error", error);
-//             toast.error("Failed to submit the form. Please try again.");
-//         }
-//     }
-
-//     const { isDarkMode, toggleTheme } = useTheme();
-
-
-//     return (
-//         <div className={`w-full h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
-//             <Form {...form}>
-//                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-lg p-6 space-y-4">
-//                     <FormField
-//                         control={form.control}
-//                         name="brandName"
-//                         render={({ field }) => (
-//                             <FormItem>
-//                                 <FormLabel>Brand Name</FormLabel>
-//                                 <FormControl>
-//                                     <Input
-//                                         placeholder="Enter Brand Name"
-//                                         type=""
-//                                         {...field} />
-//                                 </FormControl>
-//                                 <FormMessage />
-//                             </FormItem>
-//                         )}
-//                     />
-
-//                     <FormField
-//                         control={form.control}
-//                         name="brandDescription"
-//                         render={({ field }) => (
-//                             <FormItem>
-//                                 <FormLabel>Brand Description</FormLabel>
-//                                 <FormControl>
-//                                     <Textarea
-//                                         placeholder="Enter Brand Description"
-//                                         className="resize-none"
-//                                         {...field}
-//                                     />
-//                                 </FormControl>
-//                                 <FormMessage />
-//                             </FormItem>
-//                         )}
-//                     />
-
-//                     <FormField
-//                         control={form.control}
-//                         name="brandImages"
-//                         render={({ field }) => (
-//                             <FormItem>
-//                                 <FormLabel>Brand Image</FormLabel>
-//                                 <FormControl>
-//                                     <FileUpload name="brandImages" control={form.control} />
-//                                 </FormControl>
-//                                 <FormMessage />
-//                             </FormItem>
-//                         )}
-//                     />
-
-//                     <Button type="submit" disabled={brandUploadMutation.isPending}>
-//                         {brandUploadMutation.isPending ? (
-//                             <>
-//                                 <Loader className="mr-2 h-4 w-4 animate-spin" />
-//                                 Uploading...
-//                             </>
-//                         ) : (
-//                             "Upload"
-//                         )}
-//                     </Button>
-//                 </form>
-//             </Form>
-//         </div>
-//     )
-// }
-
 
 import toast from 'react-hot-toast'
 import {
@@ -151,7 +30,7 @@ import axiosInstance from '@/utils/API'
 import { BRAND_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 interface FormValues {
@@ -171,12 +50,10 @@ interface BrandFormProps {
 }
 
 const formSingular = "Company";
-const formPlural = "Companies";
+//const formPlural = "Companies";
 
 export default function BrandForm({ isEditMode = false }: BrandFormProps) {
     const { isDarkMode } = useTheme();
-    const [existingImage, setExistingImage] = useState<string | null>(null);
-
 
 
     const { id } = useParams();
@@ -332,10 +209,11 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
                         )}
                     />
 
+                    {/* eslint-disable-next-line no-unused-vars */}
                     <FormField
                         control={form.control}
                         name="brandImage"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
                                 <FormLabel>{formSingular} Image</FormLabel>
                                 <FormControl>

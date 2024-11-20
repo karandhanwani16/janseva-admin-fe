@@ -1,4 +1,3 @@
-import { Label } from "@/components/ui/label";
 import { Check, ChevronDown } from "lucide-react";
 import { useState, useEffect, forwardRef } from "react";
 
@@ -34,8 +33,7 @@ const SelectWithSearch = forwardRef<HTMLDivElement, SelectWithSearchProps>(({
     value: controlledValue,
     onChange,
     onBlur,
-    name,
-    ...props 
+    name
 }, ref) => {
 
     const [open, setOpen] = useState<boolean>(false);

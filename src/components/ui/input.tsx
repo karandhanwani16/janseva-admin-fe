@@ -6,7 +6,7 @@ import { useTheme } from "@/store/useTheme";
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
 
-    const { isDarkMode, toggleTheme } = useTheme();
+    const { isDarkMode } = useTheme();
 
     return (
       <input

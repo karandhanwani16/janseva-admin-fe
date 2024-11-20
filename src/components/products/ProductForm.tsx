@@ -36,7 +36,7 @@ import axiosInstance from '@/utils/API'
 
 import { BRAND_API, CATEGORY_API } from '@/utils/API-ROUTES'
 
-import { AlertTriangle, ArrowLeft, Loader, Pencil, Plus, PlusIcon, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Loader, Pencil, Plus, X } from 'lucide-react'
 
 import { useTheme } from '@/store/useTheme'
 
@@ -57,7 +57,6 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { ScrollArea } from '../ui/scroll-area'
 import { TooltipContent, Tooltip, TooltipTrigger } from '../ui/tooltip'
 import { TooltipProvider } from '../ui/tooltip'
-import { AxiosError } from 'axios'
 import { PRODUCT_API } from '../../utils/API-ROUTES'
 
 type DiscountType = 'percentage' | 'fixed'
@@ -164,7 +163,7 @@ const formSchema = z.object({
 });
 
 const formSingular = "Product";
-const formPlural = "Products";
+//const formPlural = "Products";
 
 export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     const { isDarkMode } = useTheme();
@@ -221,7 +220,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
             return axiosInstance[method](apiUrl, payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
- 
+
         },
         onSuccess: (response) => {
             const { data: { status, message } } = response;
@@ -882,11 +881,11 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                     </CardTitle>
 
                                     <CardContent className='p-0 pt-4'>
-
+                                        {/* eslint-disable-next-line no-unused-vars */}
                                         <FormField
                                             control={form.control}
                                             name="productImages"
-                                            render={({ field }) => (
+                                            render={() => (
                                                 <FormItem>
                                                     <FormControl>
                                                         <FileUpload
@@ -1023,10 +1022,11 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                             </FormItem>
                                                         )}
                                                     />
+                                                    {/* eslint-disable-next-line no-unused-vars */}
                                                     <FormField
                                                         control={form.control}
                                                         name="productAlternativeImage"
-                                                        render={({ field }) => (
+                                                        render={() => (
                                                             <FormItem className='col-span-2'>
                                                                 <FormLabel>Alternative Image</FormLabel>
                                                                 <FormControl>

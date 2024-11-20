@@ -1,7 +1,7 @@
 import DataTable from "../Datatable/DataTable";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/API";
-import { BRAND_API, PRODUCT_API } from "@/utils/API-ROUTES";
+import { PRODUCT_API } from "@/utils/API-ROUTES";
 import toast from "react-hot-toast";
 
 const columns = [
@@ -36,17 +36,6 @@ const columns = [
     }
 ]
 
-// interface Product {
-//     id: string
-//     name: string
-//     description: string
-//     logoUrl: string | null
-//     websiteUrl: string | null
-//     createdAt: string
-//     updatedAt: string
-//     createdBy: string
-//     updatedBy: string
-// }
 
 interface ProductResponse {
     status: string

@@ -16,14 +16,10 @@ import {
 } from "@tanstack/react-table"
 
 import {
-    ArrowUpDown,
     ChevronDown,
     MoreHorizontal,
-    Plus,
     Trash,
     Loader2,
-    Moon,
-    Sun,
     Pencil
 } from "lucide-react"
 
@@ -90,11 +86,9 @@ interface DataTableProps<TData> {
 export default function DataTable<TData extends { id: string }>({
     columns: columnsProp,
     data,
-    title,
     totalCount,
     onDelete,
     onDeleteSelected,
-    onEdit,
     isLoading,
     error,
     editPath,
@@ -157,9 +151,9 @@ export default function DataTable<TData extends { id: string }>({
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 onClick={() => {
-                                    if(editPath){
+                                    if (editPath) {
                                         navigate(`${editPath}/${item.id}`)
-                                    } 
+                                    }
                                 }}
                                 className="dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                                 disabled={isDeleting}
@@ -233,7 +227,7 @@ export default function DataTable<TData extends { id: string }>({
         getFacetedUniqueValues: getFacetedUniqueValues(),
         manualPagination: true,
         pageCount: Math.ceil(totalCount / pageSize),
-        globalFilterFn: (row: Row<TData>, columnId: string, filterValue: string) => {
+        globalFilterFn: (row: Row<TData>, _columnId: string, filterValue: string) => {
             const search = filterValue.toLowerCase();
             return Object.values(row.original as Record<string, unknown>).some(
                 value =>

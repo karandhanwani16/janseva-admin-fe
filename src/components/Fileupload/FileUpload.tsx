@@ -1,7 +1,6 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 import { X, Upload, Loader } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useController, Control } from "react-hook-form";
 import { useTheme } from "@/store/useTheme";
@@ -39,7 +38,7 @@ export default function FileUpload({
 
     const files = multiple ? (Array.isArray(value) ? value : []) : (value ? [value] : []);
 
-    const { isDarkMode, toggleTheme } = useTheme();
+    const { isDarkMode } = useTheme();
 
     return (
         <Card className={`w-full ${isWidthFull ? "w-full" : "max-w-md"} ${isDarkMode ? "bg-zinc-800" : ""}`}>
@@ -149,8 +148,6 @@ const ImagePreview = ({
 
 function Dropzone({
     onDrop,
-    value,
-    onChange,
     multiple,
     maxFiles,
     accept,

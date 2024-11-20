@@ -29,7 +29,7 @@ import axiosInstance from '@/utils/API'
 import { CATEGORY_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 interface FormValues {
@@ -49,11 +49,10 @@ interface CategoryFormProps {
 }
 
 const formSingular = "Category";
-const formPlural = "Categories";
+//const formPlural = "Categories";
 
 export default function CategoryForm({ isEditMode = false }: CategoryFormProps) {
     const { isDarkMode } = useTheme();
-    const [existingImage, setExistingImage] = useState<string | null>(null);
 
     const { id } = useParams();
 
@@ -165,7 +164,7 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
                 isEditMode && (
                     <div className="p-4">
                         <Button
-                            variant="ghost" 
+                            variant="ghost"
                             onClick={() => navigate(-1)}
                             className="flex items-center gap-2"
                         >
@@ -217,7 +216,7 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
                     <FormField
                         control={form.control}
                         name="categoryImage"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
                                 <FormLabel>{formSingular} Image</FormLabel>
                                 <FormControl>

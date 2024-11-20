@@ -7,7 +7,7 @@ const Textarea = React.forwardRef<
   React.ComponentProps<"textarea">
 >(({ className, ...props }, ref) => {
 
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode } = useTheme();
 
   return (
     <textarea

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Moon, Sun, User, Settings, LogOut, Menu, Users, FileText, BarChart, MessageSquare, LayoutDashboard, ChevronDown } from 'lucide-react'
+import { Moon, Sun, User, Settings, LogOut, Menu, FileText, LayoutDashboard, ChevronDown } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +10,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
     Sidebar,
     SidebarContent,
@@ -30,8 +29,8 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useTheme } from '@/store/useTheme'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ADMIN_HOME_UI, ADMIN_CATEGORIES_UI, ADMIN_PRODUCTS_UI, ADMIN_ORDERS_UI, ADMIN_USERS_UI, ADMIN_PAYMENTS_UI, ADMIN_SETTINGS_UI, ADMIN_COMPANIES_UI, LOGIN_UI } from '@/utils/ROUTES'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { ADMIN_HOME_UI, ADMIN_CATEGORIES_UI, ADMIN_PRODUCTS_UI, ADMIN_ORDERS_UI, ADMIN_USERS_UI, ADMIN_PAYMENTS_UI, ADMIN_SETTINGS_UI, ADMIN_COMPANIES_UI } from '@/utils/ROUTES'
 import useAuthStore from '@/store/useAuth'
 import { capitalizeWords } from '@/utils/utils'
 import { toast } from 'react-hot-toast'
