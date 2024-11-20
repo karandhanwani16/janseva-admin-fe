@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 // Create an Axios instance
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL, // Set your API base URL
-    timeout: 10000, // Set a timeout for requests
+    timeout: 120000, // Set a timeout for requests
 });
 
 // Request Interceptor
