@@ -31,17 +31,18 @@ import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import PageLoader from '../PageLoader'
 
 interface FormValues {
     categoryName: string;
     categoryDescription?: string;
-    categoryImage?: File[] | null;
+    categoryImage: File | null;
 }
 
 const formSchema = z.object({
     categoryName: z.string(),
     categoryDescription: z.string().optional(),
-    categoryImage: z.array(z.instanceof(File)).nullable().optional(),
+    categoryImage: z.instanceof(File),
 });
 
 interface CategoryFormProps {
@@ -56,7 +57,7 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
 
     const { id } = useParams();
 
-    const { data: categoryData, refetch: fetchCategoryData } = useQuery({
+    const { data: categoryData, refetch: fetchCategoryData, isLoading: isCategoryLoading } = useQuery({
         queryKey: ['category', id],
         queryFn: () => axiosInstance.get(`${CATEGORY_API}/${id}`),
         enabled: false // Prevent auto-fetching
@@ -101,7 +102,7 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
                         form.reset({
                             categoryName: category.name || '',
                             categoryDescription: category.description || '',
-                            categoryImage: [file]
+                            categoryImage: file
                         });
                     })
                     .catch(err => {
@@ -129,8 +130,8 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
             const formData = new FormData();
             formData.append('name', data.categoryName);
             if (data.categoryDescription) formData.append('description', data.categoryDescription);
-            if (data.categoryImage && data.categoryImage.length > 0) {
-                formData.append('logo', data.categoryImage[0]);
+            if (data.categoryImage) {
+                formData.append('logo', data.categoryImage);
             }
 
             const apiUrl = isEditMode ? `${CATEGORY_API}/${id}` : CATEGORY_API;
@@ -173,6 +174,10 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
                         </Button>
                     </div>
                 )
+            }
+
+            {
+                (isEditMode && isCategoryLoading) && <PageLoader />
             }
 
             <Form {...form}>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
-import { Moon, Sun, Eye, EyeOff } from 'lucide-react'
+import { Moon, Sun, Eye, EyeOff, Loader } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -66,7 +66,7 @@ export default function LoginPage() {
 
     return (
         <div className={`min-h-screen flex items-center justify-center bg-background ${isDarkMode ? 'dark' : ''}`}>
-            <Card className="w-full max-w-md ">
+            <Card className="w-full max-w-sm ">
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-2xl font-bold">Login</CardTitle>
@@ -126,9 +126,19 @@ export default function LoginPage() {
                             </div>
                             {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                         </div>
-                        <Button type="submit" className="w-full">Sign In</Button>
+                        <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                            {loginMutation.isPending ? (
+                                <>
+                                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                    Signing in...
+                                </>
+                            ) : (
+                                "Sign In"
+                            )}
+                        </Button>
                     </form>
-                </CardContent>             </Card>
+                </CardContent>
+            </Card>
         </div>
     )
 }

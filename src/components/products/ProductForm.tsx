@@ -58,6 +58,7 @@ import { ScrollArea } from '../ui/scroll-area'
 import { TooltipContent, Tooltip, TooltipTrigger } from '../ui/tooltip'
 import { TooltipProvider } from '../ui/tooltip'
 import { PRODUCT_API } from '../../utils/API-ROUTES'
+import PageLoader from '../PageLoader'
 
 type DiscountType = 'percentage' | 'fixed'
 
@@ -398,7 +399,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     const { id } = useParams();
 
 
-    const { data: productData, refetch: fetchProductData } = useQuery({
+    const { data: productData, refetch: fetchProductData, isLoading: isProductLoading } = useQuery({
         queryKey: ['product', id],
         queryFn: () => axiosInstance.get(`${PRODUCT_API}/${id}`),
         enabled: false // Prevent auto-fetching
@@ -513,6 +514,10 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                         </Button>
                     </div>
                 )
+            }
+
+            {
+                (isEditMode && isProductLoading) && <PageLoader />
             }
 
             <Form {...form}>

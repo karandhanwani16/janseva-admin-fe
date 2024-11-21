@@ -30,19 +30,20 @@ import axiosInstance from '@/utils/API'
 import { BRAND_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import PageLoader from '../PageLoader'
 
 interface FormValues {
     brandName: string;
     brandDescription?: string;
-    brandImage?: File[] | null;
+    brandImage?: File | null;
 }
 
 const formSchema = z.object({
     brandName: z.string(),
     brandDescription: z.string().optional(),
-    brandImage: z.array(z.instanceof(File)).nullable().optional(),
+    brandImage: z.instanceof(File).nullable().optional(),
 });
 
 interface BrandFormProps {
@@ -55,10 +56,11 @@ const formSingular = "Company";
 export default function BrandForm({ isEditMode = false }: BrandFormProps) {
     const { isDarkMode } = useTheme();
 
+    // const [isBrandLoading, setIsBrandLoading] = useState(true);
 
     const { id } = useParams();
-
-    const { data: brandData, refetch: fetchBrandData } = useQuery({
+    // const { data: brandData, refetch: fetchBrandData } = useQuery({
+    const { data: brandData, refetch: fetchBrandData, isLoading: isBrandLoading } = useQuery({
         queryKey: ['brand', id],
         queryFn: () => axiosInstance.get(`${BRAND_API}/${id}`),
         enabled: false // Prevent auto-fetching
@@ -85,7 +87,7 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
                         form.reset({
                             brandName: brand.name || '',
                             brandDescription: brand.description || '',
-                            brandImage: [file]
+                            brandImage: file
                         });
                     })
                     .catch(err => {
@@ -113,8 +115,8 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
             const formData = new FormData();
             formData.append('name', data.brandName);
             if (data.brandDescription) formData.append('description', data.brandDescription);
-            if (data.brandImage && data.brandImage.length > 0) {
-                formData.append('logo', data.brandImage[0]);
+            if (data.brandImage) {
+                formData.append('logo', data.brandImage);
             }
 
             const apiUrl = isEditMode ? `${BRAND_API}/${id}` : BRAND_API;
@@ -154,7 +156,7 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
     const navigate = useNavigate();
 
     return (
-        <div className={`w-full h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
+        <div className={`w-full relative h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
 
             {
                 isEditMode && (
@@ -169,6 +171,10 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
                         </Button>
                     </div>
                 )
+            }
+
+            {
+                (isEditMode && isBrandLoading) && <PageLoader />
             }
 
             <Form {...form}>
