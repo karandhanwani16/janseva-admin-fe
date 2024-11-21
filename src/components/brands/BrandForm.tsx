@@ -30,7 +30,7 @@ import axiosInstance from '@/utils/API'
 import { BRAND_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PageLoader from '../PageLoader'
 
