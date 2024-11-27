@@ -31,7 +31,7 @@ import { BRAND_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import PageLoader from '../PageLoader'
 
 interface FormValues {
@@ -59,6 +59,13 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
     // const [isBrandLoading, setIsBrandLoading] = useState(true);
 
     const { id } = useParams();
+
+    // get query params
+    const [queryParams] = useSearchParams();
+    const ref = queryParams.get('ref');
+
+
+
     // const { data: brandData, refetch: fetchBrandData } = useQuery({
     const { data: brandData, refetch: fetchBrandData, isLoading: isBrandLoading } = useQuery({
         queryKey: ['brand', id],
@@ -158,9 +165,10 @@ export default function BrandForm({ isEditMode = false }: BrandFormProps) {
     return (
         <div className={`w-full relative h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
 
+
             {
-                isEditMode && (
-                    <div className="p-4">
+                (isEditMode || ref === 'product') && (
+                    <div className="p-4 pb-0">
                         <Button
                             variant="ghost"
                             onClick={() => navigate(-1)}

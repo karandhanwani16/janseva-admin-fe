@@ -1,0 +1,23 @@
+#EditorContainer h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#EditorContainer h2 {
+    font-size: 1.5rem;
+    font-weight: semibold;
+}
+
+#EditorContainer h2 {
+    font-size: 1.5rem;
+    font-weight: semibold;
+}
+
+#EditorContainer ul {
+    list-style-type: disc !important;
+    list-style-position: inside;
+}
+#EditorContainer ol {
+    list-style-type: decimal !important;
+    list-style-position: inside;
+}

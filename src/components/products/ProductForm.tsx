@@ -59,48 +59,11 @@ import { TooltipContent, Tooltip, TooltipTrigger } from '../ui/tooltip'
 import { TooltipProvider } from '../ui/tooltip'
 import { PRODUCT_API } from '../../utils/API-ROUTES'
 import PageLoader from '../PageLoader'
+import RichTextEditor from '../RichTextEditor'
 
-type DiscountType = 'percentage' | 'fixed'
-
-interface FormValues {
-    productName: string;
-    productDescription?: string;
-    brandId: string;
-    categoryId: string;
-    productUses: string;
-    productDirections: string;
-    productSideEffects: string;
-    productAdditionalInfo: string;
-    productVariations: ProductVariation[];
-    productImages: File[] | null;
-    hasAlternativeProduct: boolean;
-    productAlternatives: ProductAlternative;
-    productAlternativeImage: File | null;
-}
-
-interface ProductVariation {
-    id: string;
-    name: string;
-    price: number;
-    discount: number;
-    discountType: string;
-    stock: number;
-    units: number;
-}
-
-interface ProductAlternative {
-    productAlternativeName: string;
-    productAlternativeCompanyName: string;
-    productAlternativeContent: string;
-    productAlternativePrice: number;
-    productAlternativeDiscount: number;
-    productAlternativeDiscountType: string;
-    productAlternativeUnits: number;
-}
-
-interface ProductFormProps {
-    isEditMode?: boolean;
-}
+import {
+    FormValues, DiscountType, ProductFormProps, ProductVariation
+} from './types'
 
 const productVariationSchema = z.object({
     id: z.string(),
@@ -139,9 +102,22 @@ const formSchema = z.object({
     brandId: z.string(),
     categoryId: z.string(),
     productUses: z.string(),
+    productComposition: z.string(),
     productDirections: z.string(),
     productSideEffects: z.string(),
     productAdditionalInfo: z.string(),
+    productRouteOfAdministration: z.string(),
+    productMedActivity: z.string(),
+    productPrecaution: z.string(),
+    productInteractions: z.string(),
+    productDosageInformation: z.string(),
+    productStorage: z.string(),
+    productDietAndLifestyleGuidance: z.string(),
+    productHighlights: z.string(),
+    productIngredients: z.string(),
+    productKeyUses: z.string(),
+    productHowToUse: z.string(),
+    productSafetyInformation: z.string(),
     productVariations: z.array(productVariationSchema).min(1, "At least one product variation is required"),
     productImages: z.array(z.instanceof(File)).min(1, "At least one product image is required"),
     hasAlternativeProduct: z.boolean(),
@@ -163,13 +139,14 @@ const formSchema = z.object({
     path: ["productAlternativeImage"]
 });
 
+
 const formSingular = "Product";
 //const formPlural = "Products";
 
 export default function ProductForm({ isEditMode = false }: ProductFormProps) {
+
     const { isDarkMode } = useTheme();
     const navigate = useNavigate();
-
 
     // getting dropdown data
 
@@ -189,13 +166,26 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: "",
-            productDescription: "",
             brandId: "",
             categoryId: "",
+            productDescription: "",
+            productComposition: "",
             productUses: "",
             productDirections: "",
             productSideEffects: "",
             productAdditionalInfo: "",
+            productRouteOfAdministration: "",
+            productMedActivity: "",
+            productPrecaution: "",
+            productInteractions: "",
+            productDosageInformation: "",
+            productStorage: "",
+            productDietAndLifestyleGuidance: "",
+            productHighlights: "",
+            productIngredients: "",
+            productKeyUses: "",
+            productHowToUse: "",
+            productSafetyInformation: "",
             productVariations: [],
             productImages: null,
             hasAlternativeProduct: false,
@@ -215,6 +205,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
 
     const productMutation = useMutation({
         mutationFn: (payload: Record<string, any>) => {
+
             const apiUrl = isEditMode ? `${PRODUCT_API}/${id}` : PRODUCT_API;
             const method = isEditMode ? 'put' : 'post';
 
@@ -237,16 +228,30 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     async function onSubmit(values: FormValues) {
         try {
 
+
             // Create a payload object for JSON
             const payload: Record<string, any> = {
                 productName: values.productName,
-                productDescription: values.productDescription || '',
                 brandId: values.brandId,
                 categoryId: values.categoryId,
+                productDescription: values.productDescription || '',
                 productUses: values.productUses,
+                productComposition: values.productComposition,
                 productDirections: values.productDirections,
                 productSideEffects: values.productSideEffects,
                 productAdditionalInfo: values.productAdditionalInfo,
+                productRouteOfAdministration: values.productRouteOfAdministration,
+                productMedActivity: values.productMedActivity,
+                productPrecaution: values.productPrecaution,
+                productInteractions: values.productInteractions,
+                productDosageInformation: values.productDosageInformation,
+                productStorage: values.productStorage,
+                productDietAndLifestyleGuidance: values.productDietAndLifestyleGuidance,
+                productHighlights: values.productHighlights,
+                productIngredients: values.productIngredients,
+                productKeyUses: values.productKeyUses,
+                productHowToUse: values.productHowToUse,
+                productSafetyInformation: values.productSafetyInformation,
                 hasAlternativeProduct: values.hasAlternativeProduct,
                 productVariations: values.productVariations || [],
                 productAlternatives: values.hasAlternativeProduct
@@ -277,6 +282,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
             }
 
             productMutation.mutate(payload);
+            // console.log(payload);
 
         } catch (error) {
             toast.error('Error: ' + (error instanceof Error ? error.message : error));
@@ -285,7 +291,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
 
 
     // alternative product handling
-    const [hasAlternativeProduct, setHasAlternativeProduct] = useState(true);
+    const [hasAlternativeProduct, setHasAlternativeProduct] = useState(false);
 
     const handleAlternativeProductChange = (value: boolean) => {
         form.setValue('hasAlternativeProduct', value);
@@ -306,7 +312,6 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
 
 
     // variations Handling
-
     const [isVariantDialogOpen, setIsVariantDialogOpen] = useState(false)
     const [currentVariation, setCurrentVariation] = useState<ProductVariation>({
         id: '',
@@ -413,17 +418,25 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     }, [id, isEditMode, fetchProductData]);
 
 
+    const [isImagesLoading, setIsImagesLoading] = useState(isEditMode);
+
     useEffect(() => {
+
+
         const loadImagesAsFiles = async (imageUrls: string[]) => {
             try {
+                setIsImagesLoading(true);
                 const filePromises = imageUrls.map(async (url, index) => {
                     const response = await fetch(url);
                     const blob = await response.blob();
                     return new File([blob], `image_${index + 1}.png`, { type: blob.type });
                 });
-                return Promise.all(filePromises);
+                const files = await Promise.all(filePromises);
+                setIsImagesLoading(false);
+                return files;
             } catch (error) {
                 console.error("Error converting images to File objects:", error);
+                setIsImagesLoading(false);
                 return [];
             }
         };
@@ -443,9 +456,22 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                     brandId: productDetails.brandId || "",
                     categoryId: productDetails.categoryId || "",
                     productUses: productDetails.uses || "",
+                    productComposition: productDetails.composition || "",
                     productDirections: productDetails.direction || "",
                     productSideEffects: productDetails.sideEffects || "",
                     productAdditionalInfo: productDetails.additionalInfo || "",
+                    productRouteOfAdministration: productDetails.routeOfAdministration || "",
+                    productMedActivity: productDetails.medActivity || "",
+                    productPrecaution: productDetails.precaution || "",
+                    productInteractions: productDetails.interactions || "",
+                    productDosageInformation: productDetails.dosageInformation || "",
+                    productStorage: productDetails.storage || "",
+                    productDietAndLifestyleGuidance: productDetails.dietAndLifestyleGuidance || "",
+                    productHighlights: productDetails.highlights || "",
+                    productIngredients: productDetails.ingredients || "",
+                    productKeyUses: productDetails.keyUses || "",
+                    productHowToUse: productDetails.howToUse || "",
+                    productSafetyInformation: productDetails.safetyInformation || "",
                     productVariations: variationsDetails?.map((variation: ProductVariation) => ({
                         id: variation.id,
                         name: variation.name,
@@ -455,7 +481,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                         units: variation.units,
                         stock: variation.stock,
                     })) || [],
-                    productImages: productImages, // Now as File objects
+                    productImages: productImages,
                     hasAlternativeProduct: !!alternativeDetails,
                     productAlternativeImage: productAlternativeImage ? productAlternativeImage[0] : null,
                     productAlternatives: {
@@ -468,6 +494,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                         productAlternativeUnits: alternativeDetails?.units || 0,
                     },
                 };
+
 
                 // Reset the form with the fetched data
                 form.reset(formValues);
@@ -499,6 +526,210 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     }
 
 
+    const handleNewItemClick = (label: string) => {
+        // navigate(`/${}s/upload?ref=product`);
+
+        const path = getNavigationPath(label.toLowerCase());
+        navigate(path);
+
+    }
+
+    const getNavigationPath = (label: string) => {
+        switch (label) {
+            case 'brand':
+                return '/admin/companies/upload?ref=product';
+            case 'category':
+                return '/admin/categories/upload?ref=product';
+            default:
+                return '/admin/products/upload';
+        }
+    }
+
+    const productDetailsMutation = useMutation({
+        mutationFn: (payload: Record<string, any>) => {
+            return axiosInstance.post(`${PRODUCT_API}/scrape`, payload, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+        },
+        onSuccess: (response) => {
+            try {
+
+                const { data, message, status } = response.data;
+                if (status === "success") {
+                    toast.success("Product details loaded successfully");
+
+                    // set the form values
+                    // form.setValue('productComposition', data.composition);
+
+                    if (data.description) {
+                        form.setValue('productDescription', data.description);
+                    }
+
+                    if (data.additionalInformation?.length > 0) {
+                        const additionalInformation = data.additionalInformation
+                            .map((info: string) => `<li>${info}</li>`)
+                            .join('');
+
+                        form.setValue('productAdditionalInfo', `<ul>${additionalInformation}</ul>`);
+                    } else {
+                        form.setValue('productAdditionalInfo', '');
+                    }
+
+                    if (data.ingredients?.length > 0) {
+                        const ingredients = data.ingredients
+                            .map((ingredient: string) => `<li>${ingredient}</li>`)
+                            .join('');
+
+                        form.setValue('productIngredients', `<ul>${ingredients}</ul>`);
+                    } else {
+                        form.setValue('productIngredients', '');
+                    }
+
+                    if (data.composition) {
+                        form.setValue('productComposition', data.composition);
+                    }
+
+                    if (data.uses) {
+                        form.setValue('productUses', data.uses);
+                    }
+
+                    if (data.direction) {
+                        form.setValue('productDirections', data.direction);
+                    }
+
+                    if (data.routeOfAdministration) {
+                        form.setValue('productRouteOfAdministration', data.routeOfAdministration);
+                    }
+
+                    if (data.sideEffects?.length > 0) {
+                        form.setValue('productSideEffects', data.sideEffects);
+                    }
+
+                    if (data.medActivity) {
+                        form.setValue('productMedActivity', data.medActivity);
+                    }
+
+                    if (data.precaution?.length > 0) {
+                        const precaution = data.precaution
+                            .map((step: string) => `<li>${step}</li>`)
+                            .join('');
+
+                        form.setValue('productPrecaution', `<ul>${precaution}</ul>`);
+                    } else {
+                        form.setValue('productPrecaution', '');
+                    }
+
+                    if (data.interactions?.length > 0) {
+                        const interactions = data.interactions
+                            .map((interaction: string) => `<li>${interaction}</li>`)
+                            .join('');
+
+                        form.setValue('productInteractions', `<ul>${interactions}</ul>`);
+                    } else {
+                        form.setValue('productInteractions', '');
+                    }
+
+                    if (data.dosageInformation?.length > 0) {
+                        const dosageInformation = data.dosageInformation
+                            .map((step: string) => `<li>${step}</li>`)
+                            .join('');
+
+                        form.setValue('productDosageInformation', `<ul>${dosageInformation}</ul>`);
+                    } else {
+                        form.setValue('productDosageInformation', '');
+                    }
+
+                    if (data.storage) {
+                        form.setValue('productStorage', data.storage);
+                    }
+
+                    if (data.dietAndLifestyleGuidance) {
+                        form.setValue('productDietAndLifestyleGuidance', data.dietAndLifestyleGuidance);
+                    }
+
+                    if (data.highlights?.length > 0) {
+                        const highlights = data.highlights
+                            .map((highlight: string) => `<li>${highlight}</li>`)
+                            .join('');
+
+                        form.setValue('productHighlights', `<ul>${highlights}</ul>`);
+                    } else {
+                        form.setValue('productHighlights', '');
+                    }
+
+
+                    if (data.keyUses?.length > 0) {
+                        const keyUses = data.keyUses
+                            .map((use: string) => `<li>${use}</li>`)
+                            .join('');
+
+                        form.setValue('productKeyUses', `<ul>${keyUses}</ul>`);
+                    } else {
+                        form.setValue('productKeyUses', '');
+                    }
+
+                    if (data.howToUse?.length > 0) {
+                        const howToUse = data.howToUse
+                            .map((step: string) => `<li>${step}</li>`)
+                            .join('');
+
+                        form.setValue('productHowToUse', `<ul>${howToUse}</ul>`);
+                    } else {
+                        form.setValue('productHowToUse', '');
+                    }
+
+                    if (data.safetyInformation) {
+                        form.setValue('productSafetyInformation', data.safetyInformation);
+                    }
+
+
+                } else {
+                    toast.error(message);
+                }
+            } catch (error) {
+                toast.error("Something went wrong");
+            }
+        },
+        onError: (error) => toast.error(error instanceof Error ? error.message : error),
+    });
+
+    const loadProductDetails = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (form.getValues('productName')) {
+            // reset the details and not whole form
+            form.setValue('productDescription', '');
+            form.setValue('productComposition', '');
+            form.setValue('productUses', '');
+            form.setValue('productDirections', '');
+            form.setValue('productSideEffects', '');
+            form.setValue('productAdditionalInfo', '');
+            form.setValue('productPrecaution', '');
+            form.setValue('productInteractions', '');
+            form.setValue('productDosageInformation', '');
+            form.setValue('productStorage', '');
+            form.setValue('productDietAndLifestyleGuidance', '');
+            form.setValue('productHighlights', '');
+            form.setValue('productKeyUses', '');
+            form.setValue('productHowToUse', '');
+            form.setValue('productSafetyInformation', '');
+            form.setValue('productIngredients', '');
+            form.setValue('productMedActivity', '');
+
+
+            productDetailsMutation.mutate({ medicineName: form.getValues('productName') });
+        } else {
+            toast.error('Please enter a product name before loading details');
+        }
+    }
+
+    // const handleRichTextEditorChange = (...params: any) => {
+    //     console.log(params);
+    // }
+
+
+
+
     return (
         <div className={`w-full h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
             {
@@ -515,9 +746,8 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                     </div>
                 )
             }
-
             {
-                (isEditMode && isProductLoading) && <PageLoader />
+                (isEditMode && isImagesLoading) && <PageLoader />
             }
 
             <Form {...form}>
@@ -536,6 +766,16 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                     <CardContent className='p-0'>
 
                                     </CardContent>
+                                    <div className='w-full flex justify-end pb-4'>
+                                        <Button disabled={productDetailsMutation.isPending} className={`bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-700 ${productDetailsMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={loadProductDetails}>
+                                            {
+                                                productDetailsMutation.isPending ? <>
+                                                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                                    loading...
+                                                </> : <>Load Product Details</>
+                                            }
+                                        </Button>
+                                    </div>
 
                                     <div className='w-full grid grid-cols-3 gap-4'>
 
@@ -563,7 +803,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                 <FormItem>
                                                     <FormLabel>{formSingular} Brand</FormLabel>
                                                     <FormControl>
-                                                        <SelectWithSearch data={brandData || []} label="Brand" {...field} />
+                                                        <SelectWithSearch data={brandData || []} label="Brand" {...field} newItemClick={handleNewItemClick} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -576,7 +816,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                 <FormItem>
                                                     <FormLabel>{formSingular} Category</FormLabel>
                                                     <FormControl>
-                                                        <SelectWithSearch data={categoryData || []} label="Category" {...field} />
+                                                        <SelectWithSearch data={categoryData || []} label="Category" {...field} newItemClick={handleNewItemClick} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -604,62 +844,340 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                         />
                                         <FormField
                                             control={form.control}
-                                            name="productUses"
+                                            name="productComposition"
                                             render={({ field }) => (
-                                                <FormItem
-                                                    className="col-span-3"
-                                                >
-                                                    <FormLabel>{formSingular} Uses</FormLabel>
+                                                <FormItem className="col-span-3">
+                                                    <FormLabel>{formSingular} Composition</FormLabel>
                                                     <FormControl>
                                                         <Textarea
-                                                            placeholder={`Enter ${formSingular} Uses`}
+                                                            placeholder={`Enter ${formSingular} Composition`}
+                                                            {...field}
                                                             className="min-h-[100px]"
-                                                            {...field} />
+                                                        />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
-                                        <FormField
-                                            control={form.control}
-                                            name="productDirections"
-                                            render={({ field }) => (
-                                                <FormItem
-                                                    className="col-span-3"
-                                                >
-                                                    <FormLabel>{formSingular} Directions</FormLabel>
-                                                    <FormControl>
-                                                        <Textarea
-                                                            placeholder={`Enter ${formSingular} Directions`}
-                                                            className="min-h-[100px]"
-                                                            {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                        {(productDetailsMutation?.data?.data?.data || isEditMode) && (
+                                            <>
 
-                                        <FormField
-                                            control={form.control}
-                                            name="productSideEffects"
-                                            render={({ field }) => (
-                                                <FormItem
-                                                    className="col-span-3"
-                                                >
-                                                    <FormLabel>{formSingular} Side Effects</FormLabel>
-                                                    <FormControl>
-                                                        <Textarea
-                                                            placeholder={`Enter ${formSingular} Side Effects`}
-                                                            className="min-h-[100px]"
-                                                            {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
 
-                                        {/* Additional Info Field */}
-                                        <FormField
+                                                {productDetailsMutation?.data?.data?.data?.uses || form.getValues('productUses') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productUses"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Uses</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.direction || form.getValues('productDirections') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productDirections"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Directions</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.routeOfAdministration || form.getValues('productRouteOfAdministration') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productRouteOfAdministration"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Route Of Administration</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {/* {productDetailsMutation?.data?.data.data.sideEffects && ( */}
+                                                {productDetailsMutation?.data?.data.data.sideEffects?.length > 0 || form.getValues('productSideEffects') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productSideEffects"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Side Effects</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.medActivity || form.getValues('productMedActivity') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productMedActivity"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Medical Activity</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.precaution?.length > 0 || form.getValues('productPrecaution') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productPrecaution"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Precaution</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.interactions?.length > 0 || form.getValues('productInteractions') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productInteractions"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Interactions</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.dosageInformation?.length > 0 || form.getValues('productDosageInformation') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productDosageInformation"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Dosage Information</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.storage || form.getValues('productStorage') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productStorage"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Storage</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.dietAndLifestyleGuidance || form.getValues('productDietAndLifestyleGuidance') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productDietAndLifestyleGuidance"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Diet And Lifestyle Guidance</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.highlights?.length > 0 || form.getValues('productHighlights') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productHighlights"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Highlights</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.ingredients?.length > 0 || form.getValues('productIngredients') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productIngredients"
+                                                        render={({ field }) => {
+                                                            return (
+                                                                <FormItem className="col-span-3">
+                                                                    <FormLabel>{formSingular} Ingredients</FormLabel>
+                                                                    <FormControl>
+                                                                        <RichTextEditor
+                                                                            value={field.value}
+                                                                            onChange={(value: string) => field.onChange(value)}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            );
+                                                        }}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.keyUses?.length > 0 || form.getValues('productKeyUses') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productKeyUses"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Key Uses</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.howToUse?.length > 0 || form.getValues('productHowToUse') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productHowToUse"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} How To Use</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {productDetailsMutation?.data?.data.data.safetyInformation || form.getValues('productSafetyInformation') && (
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="productSafetyInformation"
+                                                        render={({ field }) => (
+                                                            <FormItem className="col-span-3">
+                                                                <FormLabel>{formSingular} Safety Information</FormLabel>
+                                                                <FormControl>
+                                                                    <RichTextEditor
+                                                                        value={field.value}
+                                                                        onChange={(value: string) => field.onChange(value)}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                )}
+
+                                                {
+                                                    productDetailsMutation?.data?.data?.data?.additionalInfo || form.getValues('productAdditionalInfo') && (
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="productAdditionalInfo"
+                                                            render={({ field }) => (
+                                                                <FormItem className="col-span-3">
+                                                                    <FormLabel>{formSingular} Additional Information</FormLabel>
+                                                                    <FormControl>
+                                                                        <RichTextEditor
+                                                                            value={field.value}
+                                                                            onChange={(value: string) => field.onChange(value)}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                    )}
+
+
+                                            </>
+                                        )}
+
+
+
+                                        {/* <FormField
                                             control={form.control}
                                             name="productAdditionalInfo"
                                             render={({ field }) => (
@@ -676,7 +1194,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
-                                        />
+                                        /> */}
 
                                     </div>
 
@@ -1062,10 +1580,11 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
 
 
                         </div>
+
                     </div>
 
-                    <Button type="submit" className='my-8' disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? (
+                    <Button type="submit" className='my-8' disabled={productMutation.isPending}>
+                        {productMutation.isPending ? (
                             <>
                                 <Loader className="mr-2 h-4 w-4 animate-spin" />
                                 {isEditMode ? "Updating..." : "Uploading..."}
@@ -1080,41 +1599,3 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
         </div>
     );
 }
-
-
-// const form = useForm<FormValues>({
-//     resolver: zodResolver(formSchema),
-//     defaultValues: {
-//         productName: "Test Product 1",
-//         productDescription: "Test Description 1",
-//         brandId: "",
-//         categoryId: "",
-//         productUses: "Test Uses 1",
-//         productDirections: "Test Directions 1",
-//         productSideEffects: "Test Side Effects 1",
-//         productAdditionalInfo: "Test Additional Info 1",
-//         productVariations: [
-//             {
-//                 id: "1",
-//                 name: "Test Variation 1",
-//                 price: 100,
-//                 discount: 0,
-//                 discountType: "percentage",
-//                 stock: 10,
-//                 units: 1
-//             }
-//         ],
-//         productImages: null,
-//         hasAlternativeProduct: true,
-//         productAlternativeImage: null,
-//         productAlternatives: {
-//             productAlternativeName: "Test Alternative Name 1",
-//             productAlternativeCompanyName: "Test Alternative Company Name 1",
-//             productAlternativeContent: "Test Alternative Content 1",
-//             productAlternativePrice: 200,
-//             productAlternativeDiscount: 0,
-//             productAlternativeDiscountType: "percentage",
-//             productAlternativeUnits: 15
-//         }
-//     }
-// });

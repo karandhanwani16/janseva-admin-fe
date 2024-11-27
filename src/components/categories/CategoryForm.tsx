@@ -30,7 +30,7 @@ import { CATEGORY_API } from '@/utils/API-ROUTES'
 import { ArrowLeft, Loader } from 'lucide-react'
 import { useTheme } from '@/store/useTheme'
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import PageLoader from '../PageLoader'
 
 interface FormValues {
@@ -56,6 +56,11 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
     const { isDarkMode } = useTheme();
 
     const { id } = useParams();
+
+    // get query params
+    const [queryParams] = useSearchParams();
+    const ref = queryParams.get('ref');
+
 
     const { data: categoryData, refetch: fetchCategoryData, isLoading: isCategoryLoading } = useQuery({
         queryKey: ['category', id],
@@ -162,8 +167,8 @@ export default function CategoryForm({ isEditMode = false }: CategoryFormProps) 
         <div className={`w-full h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
 
             {
-                isEditMode && (
-                    <div className="p-4">
+                (isEditMode || ref === 'product') && (
+                    <div className="p-4 pb-0">
                         <Button
                             variant="ghost"
                             onClick={() => navigate(-1)}

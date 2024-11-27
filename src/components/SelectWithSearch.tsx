@@ -1,4 +1,4 @@
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Plus } from "lucide-react";
 import { useState, useEffect, forwardRef } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { CommandSeparator } from "cmdk";
 
 interface SelectOptions {
     value: string;
@@ -25,15 +26,17 @@ interface SelectWithSearchProps {
     onChange?: (value: string) => void;
     onBlur?: () => void;
     name?: string;
+    newItemClick?: (label: string) => void;
 }
 
-const SelectWithSearch = forwardRef<HTMLDivElement, SelectWithSearchProps>(({ 
-    data, 
+const SelectWithSearch = forwardRef<HTMLDivElement, SelectWithSearchProps>(({
+    data,
     label,
     value: controlledValue,
     onChange,
     onBlur,
-    name
+    name,
+    newItemClick
 }, ref) => {
 
     const [open, setOpen] = useState<boolean>(false);
@@ -49,11 +52,17 @@ const SelectWithSearch = forwardRef<HTMLDivElement, SelectWithSearchProps>(({
         const newValue = currentValue === value ? "" : currentValue;
         setValue(newValue);
         setOpen(false);
-        
+
         if (onChange) {
             onChange(newValue);
         }
     };
+
+    const handleNewItemClick = () => {
+        if (newItemClick) {
+            newItemClick(label);
+        }
+    }
 
     return (
         <div className="space-y-2" ref={ref}>
@@ -106,6 +115,20 @@ const SelectWithSearch = forwardRef<HTMLDivElement, SelectWithSearchProps>(({
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
+
+                            <CommandSeparator className="my-1 border-t border-border" />
+                            <CommandGroup>
+                                <Button variant="ghost" onClick={handleNewItemClick} className="w-full justify-start font-normal">
+                                    <Plus
+                                        size={16}
+                                        strokeWidth={2}
+                                        className="-ms-2 me-2 opacity-60"
+                                        aria-hidden="true"
+                                    />
+                                    New {label}
+                                </Button>
+                            </CommandGroup>
+
                         </CommandList>
                     </Command>
                 </PopoverContent>
