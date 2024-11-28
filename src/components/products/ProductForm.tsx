@@ -404,7 +404,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     const { id } = useParams();
 
 
-    const { data: productData, refetch: fetchProductData, isLoading: isProductLoading } = useQuery({
+    const { data: productData, refetch: fetchProductData } = useQuery({
         queryKey: ['product', id],
         queryFn: () => axiosInstance.get(`${PRODUCT_API}/${id}`),
         enabled: false // Prevent auto-fetching
