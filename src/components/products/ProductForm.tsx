@@ -863,7 +863,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                             <>
 
 
-                                                {productDetailsMutation?.data?.data?.data?.uses || form.getValues('productUses') && (
+                                                {form.getValues('productUses') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productUses"
@@ -882,7 +882,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.direction || form.getValues('productDirections') && (
+                                                {form.getValues('productDirections') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productDirections"
@@ -901,7 +901,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.routeOfAdministration || form.getValues('productRouteOfAdministration') && (
+                                                {form.getValues('productRouteOfAdministration') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productRouteOfAdministration"
@@ -921,7 +921,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                 )}
 
                                                 {/* {productDetailsMutation?.data?.data.data.sideEffects && ( */}
-                                                {productDetailsMutation?.data?.data.data.sideEffects?.length > 0 || form.getValues('productSideEffects') && (
+                                                {form.getValues('productSideEffects') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productSideEffects"
@@ -940,7 +940,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.medActivity || form.getValues('productMedActivity') && (
+                                                {form.getValues('productMedActivity') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productMedActivity"
@@ -959,7 +959,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.precaution?.length > 0 || form.getValues('productPrecaution') && (
+                                                {form.getValues('productPrecaution') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productPrecaution"
@@ -978,7 +978,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.interactions?.length > 0 || form.getValues('productInteractions') && (
+                                                {form.getValues('productInteractions') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productInteractions"
@@ -997,7 +997,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.dosageInformation?.length > 0 || form.getValues('productDosageInformation') && (
+                                                {form.getValues('productDosageInformation') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productDosageInformation"
@@ -1016,7 +1016,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.storage || form.getValues('productStorage') && (
+                                                {form.getValues('productStorage') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productStorage"
@@ -1035,7 +1035,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.dietAndLifestyleGuidance || form.getValues('productDietAndLifestyleGuidance') && (
+                                                {form.getValues('productDietAndLifestyleGuidance') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productDietAndLifestyleGuidance"
@@ -1054,7 +1054,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.highlights?.length > 0 || form.getValues('productHighlights') && (
+                                                {form.getValues('productHighlights') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productHighlights"
@@ -1073,7 +1073,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.ingredients?.length > 0 || form.getValues('productIngredients') && (
+                                                {form.getValues('productIngredients') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productIngredients"
@@ -1094,7 +1094,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.keyUses?.length > 0 || form.getValues('productKeyUses') && (
+                                                {form.getValues('productKeyUses') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productKeyUses"
@@ -1113,7 +1113,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.howToUse?.length > 0 || form.getValues('productHowToUse') && (
+                                                {form.getValues('productHowToUse') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productHowToUse"
@@ -1132,7 +1132,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                     />
                                                 )}
 
-                                                {productDetailsMutation?.data?.data.data.safetyInformation || form.getValues('productSafetyInformation') && (
+                                                {form.getValues('productSafetyInformation') && (
                                                     <FormField
                                                         control={form.control}
                                                         name="productSafetyInformation"
@@ -1152,7 +1152,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                 )}
 
                                                 {
-                                                    productDetailsMutation?.data?.data?.data?.additionalInfo || form.getValues('productAdditionalInfo') && (
+                                                    form.getValues('productAdditionalInfo') && (
                                                         <FormField
                                                             control={form.control}
                                                             name="productAdditionalInfo"
