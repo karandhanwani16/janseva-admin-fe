@@ -2,6 +2,7 @@ export type DiscountType = 'percentage' | 'fixed'
 
 export interface FormValues {
     productName: string;
+    productSlug: string;
     productDescription?: string;
     brandId: string;
     categoryId: string;

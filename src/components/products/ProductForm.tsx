@@ -98,6 +98,7 @@ const productAlternativeSchema = z.object({
 
 const formSchema = z.object({
     productName: z.string(),
+    productSlug: z.string(),
     productDescription: z.string().optional(),
     brandId: z.string(),
     categoryId: z.string(),
@@ -166,6 +167,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: "",
+            productSlug: "",
             brandId: "",
             categoryId: "",
             productDescription: "",
@@ -232,6 +234,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
             // Create a payload object for JSON
             const payload: Record<string, any> = {
                 productName: values.productName,
+                productSlug: values.productSlug,
                 brandId: values.brandId,
                 categoryId: values.categoryId,
                 productDescription: values.productDescription || '',
@@ -452,6 +455,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
 
                 const formValues = {
                     productName: productDetails.name || "",
+                    productSlug: productDetails.slug || "",
                     productDescription: productDetails.description || "",
                     brandId: productDetails.brandId || "",
                     categoryId: productDetails.categoryId || "",
@@ -555,15 +559,26 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
         onSuccess: (response) => {
             try {
 
+                console.log(response.data);
+
                 const { data, message, status } = response.data;
                 if (status === "success") {
                     toast.success("Product details loaded successfully");
+
+
 
                     // set the form values
                     // form.setValue('productComposition', data.composition);
 
                     if (data.description) {
                         form.setValue('productDescription', data.description);
+                    }
+
+                    console.log(data.slug);
+                    
+
+                    if (data.slug) {
+                        form.setValue('productSlug', data.slug);
                     }
 
                     if (data.additionalInformation?.length > 0) {
@@ -697,7 +712,7 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
     const loadProductDetails = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (form.getValues('productName')) {
-            // reset the details and not whole form
+            form.setValue('productSlug', '');
             form.setValue('productDescription', '');
             form.setValue('productComposition', '');
             form.setValue('productUses', '');
@@ -722,13 +737,6 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
             toast.error('Please enter a product name before loading details');
         }
     }
-
-    // const handleRichTextEditorChange = (...params: any) => {
-    //     console.log(params);
-    // }
-
-
-
 
     return (
         <div className={`w-full h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg ${isDarkMode ? "bg-zinc-900" : "bg-white"}`}>
@@ -790,6 +798,33 @@ export default function ProductForm({ isEditMode = false }: ProductFormProps) {
                                                         <Input
                                                             placeholder={`Enter ${formSingular} Name`}
                                                             type="text"
+                                                            {...field}
+                                                            onChange={(e) => {
+                                                                field.onChange(e);
+                                                                // Generate slug from product name
+                                                                const slug = e.target.value
+                                                                    .toLowerCase()
+                                                                    .replace(/[^a-z0-9]+/g, '-')
+                                                                    .replace(/(^-|-$)/g, '');
+                                                                form.setValue('productSlug', slug);
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="productSlug"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>{formSingular} Slug</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder={`Enter ${formSingular} Slug`}
+                                                            type="text"
+                                                            disabled
                                                             {...field} />
                                                     </FormControl>
                                                     <FormMessage />
