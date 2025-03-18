@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/tooltip'
 import { useTheme } from '@/store/useTheme'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { ADMIN_HOME_UI, ADMIN_CATEGORIES_UI, ADMIN_PRODUCTS_UI, ADMIN_ORDERS_UI, ADMIN_USERS_UI, ADMIN_PAYMENTS_UI, ADMIN_SETTINGS_UI, ADMIN_COMPANIES_UI } from '@/utils/ROUTES'
+import { ADMIN_HOME_UI, ADMIN_CATEGORIES_UI, ADMIN_PRODUCTS_UI, ADMIN_ORDERS_UI, ADMIN_USERS_UI, ADMIN_PAYMENTS_UI, ADMIN_SETTINGS_UI, ADMIN_COMPANIES_UI, ADMIN_PRESCRIPTIONS_UI, ADMIN_COUPONS_UI } from '@/utils/ROUTES'
 import useAuthStore from '@/store/useAuth'
 import { capitalizeWords } from '@/utils/utils'
 import { toast } from 'react-hot-toast'
@@ -64,12 +64,14 @@ export default function AdminLayout() {
     const menuItems = [
         { icon: LayoutDashboard, label: 'Dashboard', value: 'dashboard', path: ADMIN_HOME_UI },
         { icon: FileText, label: 'Companies', value: 'companies', path: ADMIN_COMPANIES_UI },
+        { icon: FileText, label: 'Prescriptions', value: 'prescriptions', path: ADMIN_PRESCRIPTIONS_UI },
         { icon: FileText, label: 'Categories', value: 'categories', path: ADMIN_CATEGORIES_UI },
         { icon: FileText, label: 'Products', value: 'products', path: ADMIN_PRODUCTS_UI },
         { icon: FileText, label: 'Orders', value: 'orders', path: ADMIN_ORDERS_UI },
         { icon: FileText, label: 'Users', value: 'users', path: ADMIN_USERS_UI },
         { icon: FileText, label: 'Payments', value: 'payments', path: ADMIN_PAYMENTS_UI },
         { icon: FileText, label: 'Settings', value: 'settings', path: ADMIN_SETTINGS_UI },
+        { icon: FileText, label: 'Coupons', value: 'coupons', path: ADMIN_COUPONS_UI },
 
     ]
 

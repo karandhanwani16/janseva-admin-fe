@@ -80,6 +80,7 @@ interface DataTableProps<TData> {
     isLoading?: boolean
     error?: string
     editPath?: string
+    isSlug?: boolean
     isDeleting?: boolean
 }
 
@@ -92,6 +93,7 @@ export default function DataTable<TData extends { id: string }>({
     isLoading,
     error,
     editPath,
+    isSlug,
     isDeleting
 }: DataTableProps<TData>) {
     const navigate = useNavigate()
@@ -136,8 +138,8 @@ export default function DataTable<TData extends { id: string }>({
             id: "actions",
             header: "Actions",
             cell: ({ row }) => {
-                const item = row.original
-
+                const item = row.original as TData & { slug?: string }
+                const slug = item.slug || item.id
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -151,8 +153,12 @@ export default function DataTable<TData extends { id: string }>({
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 onClick={() => {
-                                    if (editPath) {
-                                        navigate(`${editPath}/${item.id}`)
+                                    if (isSlug) {
+                                        navigate(`${editPath}/${slug}`)
+                                    } else {
+                                        if (editPath) {
+                                            navigate(`${editPath}/${item.id}`)
+                                        }
                                     }
                                 }}
                                 className="dark:text-white dark:hover:bg-gray-700 cursor-pointer"
@@ -389,7 +395,7 @@ export default function DataTable<TData extends { id: string }>({
                                     >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id} className="dark:text-gray-300">
-                                                {flexRender(
+                                                {cell.getValue() === "" ? "-" : flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext()
                                                 )}

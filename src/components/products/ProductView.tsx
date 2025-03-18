@@ -99,6 +99,7 @@ export default function ProductView() {
                 data={productResponse?.data || []}
                 title="Products"
                 onDelete={onDelete}
+                isSlug={true}
                 onDeleteSelected={onDeleteSelected}
                 isLoading={isLoading}
                 isDeleting={productDeleteMutation.isPending || productMultipleDeleteMutation.isPending}

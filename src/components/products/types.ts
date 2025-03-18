@@ -35,6 +35,15 @@ export interface ProductVariation {
     id: string;
     name: string;
     price: number;
+    discountedPrice: number;
+    discountType: string;
+    stock: number;
+    units: number;
+}
+export interface ProductVariationEdit {
+    id: string;
+    name: string;
+    price: number;
     discount: number;
     discountType: string;
     stock: number;
@@ -53,4 +62,14 @@ interface ProductAlternative {
 
 export interface ProductFormProps {
     isEditMode?: boolean;
+}
+
+
+export interface Product {
+    id: string
+    name: string
+    imageUrl: string
+    price: number
+    description: string
+    productVariationsList: ProductVariation[]
 }

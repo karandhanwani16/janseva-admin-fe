@@ -1,0 +1,1 @@
+export type PrescriptionStatus = 'APPROVED' | 'REJECTED' | 'UPLOADED' | 'IN_REVIEW' | 'ORDERED'
